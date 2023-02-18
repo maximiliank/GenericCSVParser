@@ -1,0 +1,2 @@
+add_executable(CSVParser csvparser.cpp)
+target_link_libraries(CSVParser GenericCSVParserLib)
