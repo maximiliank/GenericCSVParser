@@ -15,8 +15,8 @@
 
 // clang-format off
 BOOST_FUSION_DEFINE_STRUCT((Parser)(Examples), TestInput,
-		(std::string, a_)
-		(double, b_)
+        (std::string, a_)
+        (double, b_)
         (bool, c_)
         (int, d_)
         (unsigned int, e_)
