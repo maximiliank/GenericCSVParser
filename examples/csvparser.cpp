@@ -1,5 +1,3 @@
-//#define BOOST_SPIRIT_X3_DEBUG
-
 #include "GenericCSVParser/parser.h"
 #include "GenericCSVParser/parser_configuration.h"
 #include "GenericCSVParser/detail/parsers/text.h"
