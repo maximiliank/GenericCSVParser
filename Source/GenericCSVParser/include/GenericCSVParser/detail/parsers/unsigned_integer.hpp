@@ -13,16 +13,7 @@ namespace GenericCSVParser::CSV {
     static inline auto as_parser(unsigned_integer)
     {
         namespace x3 = boost::spirit::x3;
-        return x3::uint_;
+        return x3::rule<struct unsigned_integer_, unsigned int>{
+                       unsigned_integer::name_.c_str()} = x3::uint_;
     }
-}
-namespace boost::spirit::x3 {
-    template<>
-    struct get_info<uint_type> {
-        typedef std::string result_type;
-        std::string operator()(uint_type const&) const
-        {
-            return GenericCSVParser::CSV::unsigned_integer::name_.c_str();
-        }
-    };
 }

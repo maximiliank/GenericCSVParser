@@ -82,10 +82,11 @@ namespace GenericCSVParser::CSV {
             std::array<const char*, sizeof...(Spec)> header, Spec... spec)
     {
         auto headerParser = [](auto first, auto&&... rest) {
-            return x3::expect[x3::as_parser(first)] >>
-                   ((x3::expect[delim<Separator>()] >>
-                            x3::expect[x3::as_parser(rest)]) >>
-                           ...);
+            return x3::rule<struct Header_t>{"header"} =
+                           x3::expect[x3::as_parser(first)] >>
+                           ((x3::expect[delim<Separator>()] >>
+                                    x3::expect[x3::as_parser(rest)]) >>
+                                   ...);
         };
         auto createHeaderParser = [](auto&& fn, const auto& u) {
             return std::apply([fn = std::forward<decltype(fn)>(fn)](
@@ -96,7 +97,7 @@ namespace GenericCSVParser::CSV {
         const auto bodyRule = csv_parser<Separator, CSVFile>(spec...);
 
         return x3::rule<CSVFile_t, CSVFile>{"file"} =
-                       headerRule >> x3::eol >> bodyRule;
+                       headerRule >> x3::expect[x3::eol] >> bodyRule;
     }
 
     using lineend_type = std::remove_cv_t<decltype(lineend)>;

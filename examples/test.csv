@@ -1,4 +1,4 @@
-Field1,Field2,Field3,Field4
-"f_test",0.5,"1",2020-12-31
-"f_lala",1.2,"1",2020-12-31
-"f_hmm",3.4,"1",2020-12-31
+Field1,Field2,Field3,Field4,Field5,Field6,Field7,Field8,Field9
+,0.5,1,-1,2,2020-12-31,true,"Long quoted text with comma ,","3.55"
+"second",1,0,2,2,2021-12-31,y,",,","0.1"
+"third",3.4,true,0,0,2022-12-31,No,"","1e2"

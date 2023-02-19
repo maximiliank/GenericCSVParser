@@ -27,6 +27,7 @@ namespace GenericCSVParser::CSV {
                        *(boost::spirit::x3::char_ - Separator - '\n');
     }
 
+    template<char Separator>
     static inline auto as_parser(quotedtext)
     {
         return boost::spirit::x3::rule<struct quoted_, std::string>{

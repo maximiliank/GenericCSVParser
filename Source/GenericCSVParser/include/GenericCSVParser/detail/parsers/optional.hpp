@@ -2,6 +2,7 @@
 
 #include <boost/spirit/home/x3/operator/optional.hpp>
 #include <boost/hana/string.hpp>
+#include <optional>
 #include "resolve_rule.hpp"
 
 namespace GenericCSVParser::CSV {
@@ -23,7 +24,7 @@ namespace GenericCSVParser::CSV {
     {
         using namespace boost::spirit::x3;
         return rule<internal::optional_<Parser>,
-                       RuleAttribute<Separator, Parser>>{
+                       std::optional<RuleAttribute<Separator, Parser>>>{
                        optional<Parser>::name_.c_str()} =
                        -as_parser<Separator>(Parser{});
     }

@@ -8,57 +8,7 @@ You can specify header column names and parser types in a configuration and then
 struct, e.g.
 
 ```c++
-#include "GenericCSVParser/parser.h"
-#include "GenericCSVParser/parser_configuration.h"
-#include "GenericCSVParser/detail/parsers/text.h"
-#include "GenericCSVParser/detail/parsers/real.hpp"
-#include "GenericCSVParser/detail/parsers/optional.hpp"
-#include "GenericCSVParser/detail/parsers/quoted.hpp"
-#include "GenericCSVParser/detail/parsers/date.hpp"
-#include <iostream>
-#include <optional>
-
-#include <boost/fusion/include/define_struct.hpp>
-
-// clang-format off
-BOOST_FUSION_DEFINE_STRUCT((Parser)(Examples), TestInput,
-		(std::string, a_)
-		(std::optional<double>, b_)
-		(double, c_)
-		(boost::gregorian::date, d_))
-// clang-format on
-
-int main()
-{
-    try
-    {
-        using namespace GenericCSVParser::CSV;
-        // clang-format off
-auto parserConfig = createParserConfiguration<',', ::Parser::Examples::TestInput>(
-	Column<text>("Field1"),
-	Column<optional<real>>("Field2"),
-	Column<quoted<real>>("Field3"),
-	Column<date>("Field4")
-);
-        // clang-format on
-        auto data = GenericCSVParser::CSVReader::parse(parserConfig,
-                R"(Field1,Field2,Field3,Field4
-,0.5,"1.0",2020-12-31
-"lala",1,"1.0",2021-12-31
-"hmm",3.4,"1.0",2022-12-31)",
-                std::cerr);
-        // Do something with data
-
-        data = GenericCSVParser::CSVReader::parseFromFile(
-                parserConfig, "test.csv", std::cerr);
-        print(data);
-    }
-    catch (const std::exception& ex)
-    {
-        std::cout << "Error: " << ex.what() << std::endl;
-    }
-    return 0;
-}
+# examples/csvparser.cpp
 ```
 
 Usage via FetchContent
@@ -66,7 +16,7 @@ Usage via FetchContent
 
 It is also possible to include the required subdirectories using `FetchContent_Declare`. This ensures that the same
 compiler flags are used.
-You should only include the subfolder containing the source of `GenericCSVParser`.
+You should only include the sub-folder containing the source of `GenericCSVParser`.
 You can create a file `cmake/GenericCSVParser.cmake` with the following content:
 
 ```cmake
@@ -88,5 +38,5 @@ and then include it in your `CMakeLists.txt`
 
 ```cmake
 include(cmake/GenericCSVParser.cmake)
-add_subdirectory(${generic_csv_parser_SOURCE_DIR}/Source/GenericCSVParser ${generic_parser_BINARY_DIR}_GenericCSVParser)
+add_subdirectory(${generic_csv_parser_SOURCE_DIR}/Source/GenericCSVParser ${generic_csv_parser_BINARY_DIR}_GenericCSVParser)
 ```

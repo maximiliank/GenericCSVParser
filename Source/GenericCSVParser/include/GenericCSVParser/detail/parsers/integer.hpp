@@ -13,16 +13,7 @@ namespace GenericCSVParser::CSV {
     static inline auto as_parser(integer)
     {
         namespace x3 = boost::spirit::x3;
-        return x3::int_;
+        return x3::rule<struct integer_, int>{integer::name_.c_str()} =
+                       x3::int_;
     }
-}
-namespace boost::spirit::x3 {
-    template<>
-    struct get_info<int_type> {
-        typedef std::string result_type;
-        std::string operator()(int_type const&) const
-        {
-            return GenericCSVParser::CSV::integer::name_.c_str();
-        }
-    };
 }

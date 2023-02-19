@@ -1,7 +1,7 @@
 #pragma once
 
-#include <boost/spirit/home/x3/numeric/bool.hpp>
 #include <boost/hana/string.hpp>
+#include <boost/spirit/home/x3/string/symbols.hpp>
 
 namespace GenericCSVParser::CSV {
     struct boolean {
@@ -9,20 +9,27 @@ namespace GenericCSVParser::CSV {
                 boost::hana::string_c<'b', 'o', 'o', 'l', 'e', 'a', 'n'>;
     };
 
+    namespace detail {
+        struct booleans_ : boost::spirit::x3::symbols<bool> {
+            booleans_()
+            {
+                // clang-format off
+                add("true", true)("True", true)("TRUE", true)
+                   ("T", true)("t", true)("1", true)
+                   ("Yes", true)("yes", true)("Y", true)("y", true)
+                   ("false", false)("False", false)("FALSE", false)
+                   ("F", false)("f", false)("0", false)
+                   ("No", false)("no", false)("N", false)("n", false)
+                   ;
+                // clang-format on
+            }
+        } booleans;
+    }
     template<char Separator>
     static inline auto as_parser(boolean)
     {
         namespace x3 = boost::spirit::x3;
-        return x3::bool_;
+        return x3::rule<struct boolean_, bool>{boolean::name_.c_str()} =
+                       detail::booleans;
     }
-}
-namespace boost::spirit::x3 {
-    template<>
-    struct get_info<bool_type> {
-        typedef std::string result_type;
-        std::string operator()(bool_type const&) const
-        {
-            return GenericCSVParser::CSV::boolean::name_.c_str();
-        }
-    };
 }

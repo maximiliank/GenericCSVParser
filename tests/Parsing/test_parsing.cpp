@@ -9,6 +9,7 @@
 #include "GenericCSVParser/detail/parsers/optional.hpp"
 #include "GenericCSVParser/detail/parsers/quoted.hpp"
 #include "GenericCSVParser/detail/parsers/date.hpp"
+#include "GenericCSVParser/detail/parsers/boolean.hpp"
 
 #include <sstream>
 
@@ -17,6 +18,7 @@ struct TestInput {
     std::optional<double> b_;
     double c_;
     boost::gregorian::date d_;
+    bool e_;
 
     bool operator==(const TestInput&) const = default;
 };
@@ -24,7 +26,7 @@ struct TestInput {
 #include <boost/fusion/include/define_struct.hpp>
 // clang-format off
 BOOST_FUSION_ADAPT_STRUCT(TestInput,
-                          (auto, a_)(auto, b_)(auto, c_)(auto, d_)
+                          (auto, a_)(auto, b_)(auto, c_)(auto, d_)(auto, e_)
 )
 // clang-format on
 namespace {
@@ -38,7 +40,8 @@ namespace {
 
             return createParserConfiguration<Separator, TestInput>(
                     Column<text>("Field1"), Column<optional<real>>("Field2"),
-                    Column<quoted<real>>("Field3"), Column<date>("Field4"));
+                    Column<quoted<real>>("Field3"), Column<date>("Field4"),
+                    Column<boolean>("Field5"));
         }
 
         template<char Separator>
@@ -63,20 +66,21 @@ namespace {
         using ::testing::ContainerEq;
 
         std::stringstream ss;
-        const std::string input = R"(Field1,Field2,Field3,Field4
-,0.5,"1.0",2020-12-31
-example,1,"1.0",2021-12-31
-test,3.4,"1.0",2022-12-31)";
+        const std::string input = R"(Field1,Field2,Field3,Field4,Field5
+,0.5,"1.0",2020-12-31,true
+example,1,"1.0",2021-12-31,false
+test,3.4,"1.0",2022-12-31,true)";
         auto data = test<','>(input, ss);
         std::vector<TestInput> expected = {
-                TestInput{"", .5, 1., boost::gregorian::date(2020, 12, 31)},
-                TestInput{"example", 1., 1.,
-                        boost::gregorian::date(2021, 12, 31)},
                 TestInput{
-                        "test", 3.4, 1., boost::gregorian::date(2022, 12, 31)}};
+                        "", .5, 1., boost::gregorian::date(2020, 12, 31), true},
+                TestInput{"example", 1., 1.,
+                        boost::gregorian::date(2021, 12, 31), false},
+                TestInput{"test", 3.4, 1., boost::gregorian::date(2022, 12, 31),
+                        true}};
         EXPECT_THAT(data, ContainerEq(expected));
         test_fail<';'>(input,
                 "In line 1:\nError! Expecting: delimiter ';' "
-                "here:\nField1,Field2,Field3,Field4\n______^_\n");
+                "here:\nField1,Field2,Field3,Field4,Field5\n______^_\n");
     }
 }

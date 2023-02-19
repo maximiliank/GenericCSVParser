@@ -13,6 +13,7 @@ namespace GenericCSVParser::CSV {
     static inline auto as_parser(skip)
     {
         using namespace boost::spirit::x3;
-        return omit[*(char_ - Separator - '\n')];
+        return x3::rule<struct skip_>{skip::name_.c_str()} =
+                       omit[*(char_ - Separator - '\n')];
     }
 }
