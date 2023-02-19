@@ -65,8 +65,8 @@ int main()
         using namespace GenericCSVParser::CSV;
         // clang-format off
         auto parserConfig = createParserConfiguration<',', ::Parser::Examples::TestInput>(
-        	Column<text>("Field1"),
-        	Column<real>("Field2"),
+            Column<text>("Field1"),
+            Column<real>("Field2"),
             Column<boolean>("Field3"),
             Column<integer>("Field4"),
             Column<unsigned_integer>("Field5"),
