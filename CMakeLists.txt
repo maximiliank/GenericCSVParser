@@ -15,7 +15,7 @@ set_project_warnings(project_warnings)
 
 include(cmake/Conan.cmake)
 
-set(CONAN_BUILD_OPTION "never")
+set(CONAN_BUILD_OPTION "never" CACHE STRING "Allow for building missing conan dependencies, default is: never")
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
 

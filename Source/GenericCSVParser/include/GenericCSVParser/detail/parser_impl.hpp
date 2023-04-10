@@ -8,8 +8,8 @@
 
 namespace GenericCSVParser::detail {
     template<typename ParserConfig, typename Iterator>
-    auto parse(ParserConfig parserConfig, Iterator begin, Iterator end,
-            std::ostream& errOut) -> typename ParserConfig::ReturnType
+    void parse(ParserConfig parserConfig, Iterator begin, Iterator end,
+            std::ostream& errOut, typename ParserConfig::ReturnType& input)
     {
         using namespace CSV;
 
@@ -24,7 +24,6 @@ namespace GenericCSVParser::detail {
                 // it later in our on_error and on_success handlers
                 x3::with<x3::error_handler_tag>(
                         std::ref(error_handler))[parser];
-        typename ParserConfig::ReturnType input;
         if (x3::parse(begin, end, p, input))
         {
             if (begin != end)
@@ -32,6 +31,13 @@ namespace GenericCSVParser::detail {
         }
         else
             throw std::runtime_error("Parse failed");
+    }
+    template<typename ParserConfig, typename Iterator>
+    auto parse(ParserConfig parserConfig, Iterator begin, Iterator end,
+            std::ostream& errOut) -> typename ParserConfig::ReturnType
+    {
+        typename ParserConfig::ReturnType input;
+        parse(parserConfig, begin, end, errOut, input);
         return input;
     }
 }
