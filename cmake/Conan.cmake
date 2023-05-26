@@ -11,6 +11,17 @@ macro(run_conan)
 
     include(${CMAKE_BINARY_DIR}/conan.cmake)
 
+    # For multi configuration generators, like VS and XCode
+    if (NOT CMAKE_CONFIGURATION_TYPES)
+        message(STATUS "Single configuration build!")
+        set(LIST_OF_BUILD_TYPES ${CMAKE_BUILD_TYPE})
+        set(CMAKE_FIND_PACKAGE_GENERATOR cmake_find_package)
+    else ()
+        message(STATUS "Multi-configuration build: '${CMAKE_CONFIGURATION_TYPES}'!")
+        set(LIST_OF_BUILD_TYPES ${CMAKE_CONFIGURATION_TYPES})
+        set(CMAKE_FIND_PACKAGE_GENERATOR cmake_find_package_multi)
+    endif ()
+
     conan_cmake_configure(
             REQUIRES
             ${CONAN_EXTRA_REQUIRES}
@@ -18,16 +29,7 @@ macro(run_conan)
             boost/1.80.0
             OPTIONS
             ${CONAN_EXTRA_OPTIONS}
-            GENERATORS cmake_find_package)
-
-    # For multi configuration generators, like VS and XCode
-    if (NOT CMAKE_CONFIGURATION_TYPES)
-        message(STATUS "Single configuration build!")
-        set(LIST_OF_BUILD_TYPES ${CMAKE_BUILD_TYPE})
-    else ()
-        message(STATUS "Multi-configuration build: '${CMAKE_CONFIGURATION_TYPES}'!")
-        set(LIST_OF_BUILD_TYPES ${CMAKE_CONFIGURATION_TYPES})
-    endif ()
+            GENERATORS ${CMAKE_FIND_PACKAGE_GENERATOR})
 
     foreach (TYPE ${LIST_OF_BUILD_TYPES})
         message(STATUS "Running Conan for build type '${TYPE}'")
