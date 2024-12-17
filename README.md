@@ -4,7 +4,7 @@ Generic CSV Parser
 This is a library that should make it easier to parse csv files into a vector of structs using `boost::spirit::x3`. The
 key idea is taken from the following post https://stackoverflow.com/a/50824603.
 
-You can specify header column names and parser types in a configuration and then parse in to `boos::fusion` adapted
+You can specify header column names and parser types in a configuration and then parse in to `boost::fusion` adapted
 struct, e.g.
 
 ```c++
